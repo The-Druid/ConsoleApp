@@ -113,9 +113,8 @@
                     }
                 }
             }
-
+            Console.WriteLine("Program zakończył działanie. Naciśnij ENTER by zakończyć");
             Console.ReadLine();
-            Console.WriteLine("Program zakończył działanie");
         }
     }
 
