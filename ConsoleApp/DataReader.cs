@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
 
     public class DataReader
     {
@@ -16,19 +17,31 @@
             ImportedObjects = new List<ImportedObject>() { new ImportedObject() };
 
             var streamReader = new StreamReader(fileToImport);
-
+            var licznik = 0; //test
             var importedLines = new List<string>();
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
                 importedLines.Add(line);
+                //Console.WriteLine(licznik+" "+line.ToString()); odczyt do line prawidłowy
+                //licznik++; 
             }
-
-            for (int i = 0; i <= importedLines.Count; i++)
+            //Console.WriteLine("Liczba elementów: "+importedLines.Count());
+            importedLines.RemoveAll(s => string.IsNullOrEmpty(s)); //usunięcie pustych linii
+            Console.WriteLine("Liczba elementów po oczyszczeniu: " + importedLines.Count());
+            for (int i = 0; i < importedLines.Count; i++) //poprawiono warunek
             {
+                
                 var importedLine = importedLines[i];
                 var values = importedLine.Split(';');
+                //Console.WriteLine(importedLine.ToString());
                 var importedObject = new ImportedObject();
+                
+                if (values.Length < 7)
+                {
+                    Console.WriteLine("Obiekt niekompletny");                   
+                }
+                else { 
                 importedObject.Type = values[0];
                 importedObject.Name = values[1];
                 importedObject.Schema = values[2];
@@ -37,8 +50,13 @@
                 importedObject.DataType = values[5];
                 importedObject.IsNullable = values[6];
                 ((List<ImportedObject>)ImportedObjects).Add(importedObject);
+                Console.WriteLine(licznik + ") Type: "+ values[0] + "Name: " + values[1] + "Schema: " + values[2] + "ParentName: " + values[3] + "ParentType: " + values[4] + "DataType: " + values[5] + "IsNullable: " + values[6]);
+                licznik++;
+                }
             }
-
+            
+           
+            
             // clear and correct imported data
             foreach (var importedObject in ImportedObjects)
             {
@@ -48,7 +66,7 @@
                 importedObject.ParentName = importedObject.ParentName.Trim().Replace(" ", "").Replace(Environment.NewLine, "");
                 importedObject.ParentType = importedObject.ParentType.Trim().Replace(" ", "").Replace(Environment.NewLine, "");
             }
-
+            
             // assign number of children
             for (int i = 0; i < ImportedObjects.Count(); i++)
             {
@@ -103,7 +121,7 @@
 
     class ImportedObject : ImportedObjectBaseClass
     {
-        public string Name
+        public new string Name
         {
             get;
             set;
