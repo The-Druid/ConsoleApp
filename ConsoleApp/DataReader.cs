@@ -7,14 +7,15 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml.Linq;
+    using System.Data.SqlTypes;
 
     public class DataReader
     {
-        IEnumerable<ImportedObject> ImportedObjects;
+        public IEnumerable<ImportedObject> ImportedObjects;
 
         public void ImportAndPrintData(string fileToImport, bool printData = true)
         {
-            ImportedObjects = new List<ImportedObject>() { new ImportedObject() };
+            ImportedObjects = new List<ImportedObject>() { };
 
             var streamReader = new StreamReader(fileToImport);
             var licznik = 0; //test
@@ -39,7 +40,7 @@
                 
                 if (values.Length < 7)
                 {
-                    Console.WriteLine("Obiekt niekompletny");                   
+                    //Console.WriteLine("Obiekt niekompletny");                   
                 }
                 else { 
                 importedObject.Type = values[0];
@@ -50,12 +51,10 @@
                 importedObject.DataType = values[5];
                 importedObject.IsNullable = values[6];
                 ((List<ImportedObject>)ImportedObjects).Add(importedObject);
-                Console.WriteLine(licznik + ") Type: "+ values[0] + "Name: " + values[1] + "Schema: " + values[2] + "ParentName: " + values[3] + "ParentType: " + values[4] + "DataType: " + values[5] + "IsNullable: " + values[6]);
+                //Console.WriteLine(licznik + ") Type: "+ values[0] + "Name: " + values[1] + "Schema: " + values[2] + "ParentName: " + values[3] + "ParentType: " + values[4] + "DataType: " + values[5] + "IsNullable: " + values[6]);
                 licznik++;
                 }
             }
-            
-           
             
             // clear and correct imported data
             foreach (var importedObject in ImportedObjects)
@@ -116,10 +115,11 @@
             }
 
             Console.ReadLine();
+            Console.WriteLine("Program zakończył działanie");
         }
     }
 
-    class ImportedObject : ImportedObjectBaseClass
+   public class ImportedObject : ImportedObjectBaseClass
     {
         public new string Name
         {
@@ -138,10 +138,32 @@
         public string IsNullable { get; set; }
 
         public double NumberOfChildren;
+
+        public ImportedObject(string name, string schema, string parentName, string parentType, string dataType, string isNullable, double numberOfChildren)
+        {
+            Name = name;
+            Schema = schema;
+            ParentName = parentName;
+            ParentType = parentType;
+            DataType = dataType;
+            IsNullable = isNullable;
+            NumberOfChildren = numberOfChildren;
+        }
+        public ImportedObject()
+        {
+            Name = "name";
+            Schema = "schema";
+            ParentName = "parentName";
+            ParentType = "parentType";
+            DataType = "dataType";
+            IsNullable = "isNullable";
+            NumberOfChildren = 0.00000000001;
+        }
     }
 
-    class ImportedObjectBaseClass
+    public class ImportedObjectBaseClass
     {
+
         public string Name { get; set; }
         public string Type { get; set; }
     }
