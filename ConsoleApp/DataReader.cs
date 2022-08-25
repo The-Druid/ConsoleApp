@@ -18,29 +18,25 @@
             ImportedObjects = new List<ImportedObject>() { };
 
             var streamReader = new StreamReader(fileToImport);
-            var licznik = 0; //test
             var importedLines = new List<string>();
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                importedLines.Add(line);
-                //Console.WriteLine(licznik+" "+line.ToString()); odczyt do line prawidłowy
-                //licznik++; 
+                importedLines.Add(line); 
             }
-            //Console.WriteLine("Liczba elementów: "+importedLines.Count());
-            importedLines.RemoveAll(s => string.IsNullOrEmpty(s)); //usunięcie pustych linii
+            
+            importedLines.RemoveAll(s => string.IsNullOrEmpty(s)); 
             Console.WriteLine("Liczba elementów po oczyszczeniu: " + importedLines.Count());
-            for (int i = 0; i < importedLines.Count; i++) //poprawiono warunek
+            for (int i = 0; i < importedLines.Count; i++)
             {
                 
                 var importedLine = importedLines[i];
                 var values = importedLine.Split(';');
-                //Console.WriteLine(importedLine.ToString());
                 var importedObject = new ImportedObject();
                 
                 if (values.Length < 7)
                 {
-                    //Console.WriteLine("Obiekt niekompletny");                   
+                    Console.WriteLine("Obiekt niekompletny");                    
                 }
                 else { 
                 importedObject.Type = values[0];
@@ -51,8 +47,6 @@
                 importedObject.DataType = values[5];
                 importedObject.IsNullable = values[6];
                 ((List<ImportedObject>)ImportedObjects).Add(importedObject);
-                //Console.WriteLine(licznik + ") Type: "+ values[0] + "Name: " + values[1] + "Schema: " + values[2] + "ParentName: " + values[3] + "ParentType: " + values[4] + "DataType: " + values[5] + "IsNullable: " + values[6]);
-                licznik++;
                 }
             }
             
@@ -118,52 +112,5 @@
         }
     }
 
-   public class ImportedObject : ImportedObjectBaseClass
-    {
-        public new string Name
-        {
-            get;
-            set;
-        }
-        public string Schema;
-
-        public string ParentName;
-        public string ParentType
-        {
-            get; set;
-        }
-
-        public string DataType { get; set; }
-        public string IsNullable { get; set; }
-
-        public double NumberOfChildren;
-
-        public ImportedObject(string name, string schema, string parentName, string parentType, string dataType, string isNullable, double numberOfChildren)
-        {
-            Name = name;
-            Schema = schema;
-            ParentName = parentName;
-            ParentType = parentType;
-            DataType = dataType;
-            IsNullable = isNullable;
-            NumberOfChildren = numberOfChildren;
-        }
-        public ImportedObject()
-        {
-            Name = "name";
-            Schema = "schema";
-            ParentName = "parentName";
-            ParentType = "parentType";
-            DataType = "dataType";
-            IsNullable = "isNullable";
-            NumberOfChildren = 0.00000000001;
-        }
-    }
-
-    public class ImportedObjectBaseClass
-    {
-
-        public string Name { get; set; }
-        public string Type { get; set; }
-    }
+  
 }
